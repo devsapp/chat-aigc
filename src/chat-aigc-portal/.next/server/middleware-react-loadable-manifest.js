@@ -1,0 +1,1 @@
+self.__REACT_LOADABLE_MANIFEST={"../components/home.tsx -> ./landing":{id:862,files:["static/chunks/93-043b6a453a0ad38b.js","static/chunks/739.72d73a73c3a9baa0.js","static/chunks/862.a0e6d9b60fc2c096.js"]}};

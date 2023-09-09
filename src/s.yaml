@@ -1,0 +1,319 @@
+edition: 1.0.0
+name: chat-aigc
+vars:
+  region: '{{region}}'
+  bucketName: '{{bucketName}}' ## 存储image
+  wanx_apikey: '{{wanx_apikey}}'
+  wanx_style: '{{wanx_style}}'
+  service: 
+    name: '{{serviceName}}'
+    description: '可对话的AIGC'
+    internetAccess: true
+    nasConfig: auto
+    vpcConfig: auto
+  chat-server:
+    asyncFunctionName: 'chat-server-async-f1'
+    syncFunctionName: 'chat-server-sync-f1'
+  prompt-beauty:
+    basepath: prompt-beauty
+    functionName: 'prompt-beauty-function'
+    serviceName: '${vars.service.name}'
+    modelPath: 'text2prompt-sd' 
+  sd-server:
+    basepath: sd-server
+    region: ${vars.region}
+    serviceName: "${vars.service.name}"
+    functionName: "sd-chat-server"
+    imageUrl: "registry.${vars.region}.aliyuncs.com/aliyun-fc/fc-stable-diffusion:sd1.5-v2"
+    filemgrToken: ""
+    extraArgs: "--nowebui"
+
+services:
+  oss-bucket:
+    component: oss # (必填) 引用 component 的名称
+    props:
+      region: ${vars.region}
+      bucket: ${vars.bucketName} # OSS bucket
+      acl: public-read # 读写权限
+      codeUri: ./chat-server/images-oss-folder # 指定本地要上传目录文件地址
+      subDir: sd-upload-images # 指定OSS Bucket 文件上传目录
+  # fc-model-download:
+  #   component: fc
+  #   actions:
+  #     pre-deploy: 
+  #       - run: npm i
+  #         path: ./prompt-beauty/source-code/download-model2nas
+  #   props:
+  #     region: ${vars.region} # 关于变量的使用方法，可以参考：https://www.serverless-devs.com/serverless-devs/yaml#变量赋值
+  #     service: ${vars.service}
+  #     function:
+  #       name: "model-download"
+  #       description: 'download model to nas'
+  #       codeUri: './prompt-beauty/source-code/download-model2nas'
+  #       runtime: nodejs16
+  #       timeout: 600
+  #       memorySize: 3072
+  #       cpu: 2.0
+  #       diskSize: 512
+  #       instanceConcurrency: 1
+  #       handler: index.handler
+  #       environmentVariables:
+  #         region: ${vars.region}
+  #         modelPath: ${vars.prompt-beauty.modelPath}
+  #         ossObjectName: ${vars.prompt-beauty.modelPath}   # text2prompt-sd or chatglm2-6b-int4
+
+  # prompt-beauty-service:
+  #   component: fc
+  #   actions: 
+  #     post-deploy: # 在deploy之前运行
+  #       - component: fc nas upload -r ./prompt-beauty/text2prompt-sd /mnt/auto/text2prompt-sd
+  #         path: ./  
+  #       - component: fc invoke --service-name ${fc-model-download.output.service.name}
+  #           --function-name model-download
+  #   props:
+  #     region: cn-hangzhou
+  #     service: ${vars.service}
+  #     function:
+  #       handler: index.handler
+  #       description: custom chat service
+  #       timeout: 7200
+  #       caPort: 8000
+  #       layers:
+  #         - acs:fc:cn-hangzhou:1431999136518149:layers/FastAPI-Python310/versions/1
+  #         - acs:fc:cn-hangzhou:1431999136518149:layers/NLP-Python310/versions/1
+  #       customRuntimeConfig:
+  #         command:
+  #           - python3
+  #           - '-u'
+  #           - main.py
+  #       instanceType: c1
+  #       runtime: custom.debian10
+  #       instanceConcurrency: 100
+  #       cpu: 8
+  #       memorySize: 32768
+  #       diskSize: 10240
+  #       environmentVariables:
+  #         PATH: >-
+  #           /var/fc/lang/python3.10/bin::/usr/local/bin/apache-maven/bin:/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/ruby/bin:/opt/bin:/code:/code/bin
+  #         PYTHONPATH: /opt/python:/code
+  #         MODEL_PATH: /mnt/auto/${vars.prompt-beauty.modelPath}
+  #         PROMPT: 'Instruction: Give a simple description of the image to generate a drawing prompt in English.\nInput: {query}\nOutput:'
+  #       name: ${vars.prompt-beauty.functionName}
+  #       asyncConfiguration: {}
+  #       codeUri: './prompt-beauty/app'
+  #     triggers:
+  #       - name: httpTrigger3
+  #         description: ''
+  #         type: http
+  #         config:
+  #           methods:
+  #             - GET
+  #             - POST
+  #             - PUT
+  #             - DELETE
+  #             - HEAD
+  #             - OPTIONS
+  #           authType: anonymous
+  #           disableURLInternet: false
+  #     customDomains:
+  #       - domainName: auto
+  #         protocol: HTTP
+  #         routeConfigs:
+  #           - path: /*  
+  chat-async-function:
+    component: fc
+    actions:
+      pre-deploy: 
+        - run: npm i --force
+          path: ./chat-server/async-render-image
+    props:
+      region: ${vars.region}
+      service: ${vars.service}
+      function:
+        name: ${vars.chat-server.asyncFunctionName}
+        description: '该函数用来调用生图服务，进行渲染'
+        timeout: 3000
+        layers:
+          - acs:fc:cn-hangzhou:official:layers/Nodejs18/versions/1
+        instanceType: c1
+        runtime: custom.debian10
+        instanceConcurrency: 100
+        memorySize: 3072
+        cpu: 2.0
+        diskSize: 512
+        environmentVariables:
+          NODE_PATH: /opt/nodejs/node_modules
+          # BASE_SD_SERVER: '${stable-diffusion.output.url.system_intranet_url}'
+          # GENERATE_PROMPT_URL: '${prompt-beauty-service.output.url.system_intranet_url}'
+          REGION: ${vars.region}
+          BUCKET_NAME: ${vars.bucketName}
+          # OPENAI_API_KEY: ${env.OPENAI_API_KEY}
+          # PROXY_URL: ${env.PROXY_URL}
+          serviceType: 'WX'
+          WX_APIKEY: '${vars.wanx_apikey}'
+          WanXStyle: '${vars.wanx_style}'
+          PATH: >-
+            /opt/nodejs18/bin::/usr/local/bin/apache-maven/bin:/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/ruby/bin:/opt/bin:/code:/code/bin
+        codeUri: ./chat-server/async-render-image
+        caPort: 3333
+      triggers:
+        - name: 'httpTrigger2'
+          type: http
+          config:
+            authType: anonymous
+            methods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - HEAD
+              - OPTIONS
+      customDomains:
+        - domainName: auto
+          protocol: HTTP
+          routeConfigs:
+            - path: /*
+  chat-sync-function:
+    component: fc
+    actions:
+      pre-deploy: 
+        - run: npm i --force
+          path: ./chat-server/sync-prompt-server
+    props:
+      region: ${vars.region}
+      service: ${vars.service}
+      function:
+        name: ${vars.chat-server.syncFunctionName}
+        description: '该函数处理chat应用的响应'
+        timeout: 3000
+        layers:
+          - acs:fc:cn-hangzhou:official:layers/Nodejs18/versions/1
+        instanceType: c1
+        runtime: custom.debian10
+        instanceConcurrency: 100
+        memorySize: 3072
+        cpu: 2.0
+        diskSize: 512
+        environmentVariables:
+          NODE_PATH: /opt/nodejs/node_modules
+          SERVER_URL: '${chat-async-function.output.url.system_intranet_url}'
+          # BASE_SD_SERVER: '${stable-diffusion.output.url.system_intranet_url}'
+          PATH: >-
+            /opt/nodejs18/bin::/usr/local/bin/apache-maven/bin:/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/ruby/bin:/opt/bin:/code:/code/bin
+        codeUri: ./chat-server/sync-prompt-server
+        caPort: 3333
+      triggers:
+        - name: httpTrigger1
+          type: http
+          config:
+            authType: anonymous
+            methods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - HEAD
+              - OPTIONS
+      customDomains:
+        - domainName: auto
+          protocol: HTTP
+          routeConfigs:
+            - path: /*
+  chat-aigc-portal:
+    component: fc
+    actions:
+       pre-deploy:
+        - run: npm i --force
+          path: ./chat-aigc-portal
+    props:
+      region: ${vars.region}
+      service: ${vars.service}
+      function:
+        name: chat-aigc-portal
+        description: 代理客户端
+        timeout: 3000
+        layers:
+          - acs:fc:cn-hangzhou:official:layers/Nodejs18/versions/1
+        instanceType: c1
+        runtime: custom.debian10
+        instanceConcurrency: 5
+        memorySize: 3072
+        cpu: 2.0
+        diskSize: 512
+        environmentVariables:
+          NODE_PATH: /opt/nodejs/node_modules
+          PATH: >-
+            /opt/nodejs18/bin::/usr/local/bin/apache-maven/bin:/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/ruby/bin:/opt/bin:/code:/code/bin
+          region: ${vars.region}
+          serviceName: ${vars.service.name}
+          postUrl: '${chat-sync-function.output.url.custom_domain[0].domain}'
+          functionName: ${vars.chat-server.asyncFunctionName}
+        codeUri: ./chat-aigc-portal
+        caPort: 3000
+      triggers:
+        - name: defaultTrigger
+          type: http
+          config:
+            authType: anonymous
+            methods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - HEAD
+              - OPTIONS
+      customDomains:
+        - domainName: auto
+          protocol: HTTP
+          routeConfigs:
+            - path: /*
+  
+  # stable-diffusion:
+  #   component: fc
+  #   actions:
+  #     post-deploy:
+  #       - component: fc ondemand put --qualifier LATEST --max 1
+  #   props:
+  #     region: ${vars.sd-server.region}
+  #     service: ${vars.service}
+  #     function:
+  #       name: ${vars.sd-server.functionName}
+  #       handler: index.handler
+  #       timeout: 7200
+  #       diskSize: 512
+  #       caPort: 7860
+  #       instanceType: fc.gpu.tesla.1
+  #       runtime: custom-container
+  #       cpu: 8
+  #       customContainerConfig:
+  #         args: ''
+  #         accelerationType: Default
+  #         image: ${vars.sd-server.imageUrl}
+  #         command: ''
+  #         webServerMode: true
+  #       instanceConcurrency: 100
+  #       memorySize: 32768
+  #       gpuMemorySize: 16384
+  #       asyncConfiguration: {}
+  #       environmentVariables:
+  #         EXTRA_ARGS: ${vars.sd-server.extraArgs}
+  #     triggers:
+  #       - name: defaultTrigger2
+  #         description: ''
+  #         type: http
+  #         qualifier: LATEST
+  #         config:
+  #           methods:
+  #             - GET
+  #             - POST
+  #             - PUT
+  #             - DELETE
+  #           authType: anonymous
+  #           disableURLInternet: false
+  #     customDomains:
+  #       - domainName: auto
+  #         protocol: HTTP
+  #         routeConfigs:
+  #           - path: /*
+
+

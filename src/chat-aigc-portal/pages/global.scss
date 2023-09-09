@@ -1,0 +1,9 @@
+.markdown-container {
+    overflow: auto;  // 添加滚动条
+    height: 100%;    // 设置div的高度为100%以适应父容器
+    width: 400px;
+    margin: 0 auto;
+    img {
+        width: 100%;
+    }
+}
