@@ -2,7 +2,7 @@ import { ModelService, SERVICE_TYPE } from '../entity';
 import { generateSdPrompt } from '../prompt-generate';
 import { text2img as sd_text2img, DEFAULT_NEGATIVE_PROMPT, DEFAULT_TXT2IMAGE_PAYLOAD } from '../stable-diffusion-apis';
 import { text2img as wx_text2img, getTaskResultById } from '../wx-apis';
-
+import { extractWanXStyle } from '../utils';
 
 export class DefaultService extends ModelService {
     baseModel = '';
@@ -10,7 +10,7 @@ export class DefaultService extends ModelService {
     negateivePromptTemplate = DEFAULT_NEGATIVE_PROMPT
     requestPayload = DEFAULT_TXT2IMAGE_PAYLOAD;
     promptTemplate = '';
-    serviceType:any = '';
+    serviceType: any = '';
     constructor(serviceType?: SERVICE_TYPE) {
         super();
 
@@ -36,13 +36,14 @@ export class DefaultService extends ModelService {
             payload.negative_prompt = DEFAULT_NEGATIVE_PROMPT;
             return await sd_text2img(payload);
         } else {
+            const { prompt: _prompt, style } = extractWanXStyle(finallyPrompt);
             const payload = {
                 "model": "wanx-v1",
                 "input": {
-                    "prompt": finallyPrompt
+                    "prompt": _prompt
                 },
                 "parameters": {
-                    "style": process.env.WanXStyle || "<sketch>",
+                    "style": style || "<auto>",
                     "size": "1024*1024",
                     "n": 1,
                     "seed": 42

@@ -45,7 +45,7 @@ app.post('/renderImage', (req, res) => __awaiter(void 0, void 0, void 0, functio
         const images = (_a = result === null || result === void 0 ? void 0 : result.images) !== null && _a !== void 0 ? _a : [];
         buffer = (0, utils_1.transformBase64ToBuffer)(images.join(''));
     }
-    const fileName = Date.now() + 'sd.png';
+    const fileName = Date.now() + 'aigc_text2img.png';
     const headers = req.headers;
     const region = process.env.REGION;
     const bucketName = process.env.BUCKET_NAME;

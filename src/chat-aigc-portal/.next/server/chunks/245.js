@@ -46,8 +46,30 @@ var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_sto
 
 
 const CONTAINER_SIZE = 720;
+const CopyToClipboard = ({ value  })=>{
+    const clipboard = (0,_mantine_hooks__WEBPACK_IMPORTED_MODULE_5__.useClipboard)({
+        timeout: 500
+    });
+    return /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(_mantine_core__WEBPACK_IMPORTED_MODULE_3__.Tooltip, {
+        label: clipboard.copied ? "已复制" : "复制",
+        withArrow: true,
+        position: "right",
+        children: /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(_mantine_core__WEBPACK_IMPORTED_MODULE_3__.ActionIcon, {
+            color: clipboard.copied ? "teal" : "gray",
+            onClick: ()=>clipboard.copy(value),
+            children: clipboard.copied ? /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(_tabler_icons_react__WEBPACK_IMPORTED_MODULE_4__.IconCheck, {
+                size: "1rem"
+            }) : /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(_tabler_icons_react__WEBPACK_IMPORTED_MODULE_4__.IconCopy, {
+                size: "1rem"
+            })
+        })
+    });
+};
 function DingTalkOutGoing() {
     const [opened, { toggle  }] = (0,_mantine_hooks__WEBPACK_IMPORTED_MODULE_5__.useDisclosure)(false);
+    const clipboard = (0,_mantine_hooks__WEBPACK_IMPORTED_MODULE_5__.useClipboard)({
+        timeout: 500
+    });
     const outgoing = (0,_store_landing__WEBPACK_IMPORTED_MODULE_7__/* .useGlobalStore */ .s)().outgoing;
     const { postUrl , token  } = outgoing;
     return /*#__PURE__*/ (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
@@ -74,23 +96,8 @@ function DingTalkOutGoing() {
                                     fw: 700,
                                     children: postUrl
                                 }),
-                                /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(_mantine_core__WEBPACK_IMPORTED_MODULE_3__.CopyButton, {
-                                    value: postUrl,
-                                    timeout: 2000,
-                                    children: ({ copied , copy  })=>/*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(_mantine_core__WEBPACK_IMPORTED_MODULE_3__.Tooltip, {
-                                            label: copied ? "已复制" : "复制",
-                                            withArrow: true,
-                                            position: "right",
-                                            children: /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(_mantine_core__WEBPACK_IMPORTED_MODULE_3__.ActionIcon, {
-                                                color: copied ? "teal" : "gray",
-                                                onClick: copy,
-                                                children: copied ? /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(_tabler_icons_react__WEBPACK_IMPORTED_MODULE_4__.IconCheck, {
-                                                    size: "1rem"
-                                                }) : /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(_tabler_icons_react__WEBPACK_IMPORTED_MODULE_4__.IconCopy, {
-                                                    size: "1rem"
-                                                })
-                                            })
-                                        })
+                                /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(CopyToClipboard, {
+                                    value: postUrl
                                 })
                             ]
                         })
@@ -114,23 +121,8 @@ function DingTalkOutGoing() {
                                     fw: 700,
                                     children: token
                                 }),
-                                /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(_mantine_core__WEBPACK_IMPORTED_MODULE_3__.CopyButton, {
-                                    value: token,
-                                    timeout: 2000,
-                                    children: ({ copied , copy  })=>/*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(_mantine_core__WEBPACK_IMPORTED_MODULE_3__.Tooltip, {
-                                            label: copied ? "已复制" : "复制",
-                                            withArrow: true,
-                                            position: "right",
-                                            children: /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(_mantine_core__WEBPACK_IMPORTED_MODULE_3__.ActionIcon, {
-                                                color: copied ? "teal" : "gray",
-                                                onClick: copy,
-                                                children: copied ? /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(_tabler_icons_react__WEBPACK_IMPORTED_MODULE_4__.IconCheck, {
-                                                    size: "1rem"
-                                                }) : /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(_tabler_icons_react__WEBPACK_IMPORTED_MODULE_4__.IconCopy, {
-                                                    size: "1rem"
-                                                })
-                                            })
-                                        })
+                                /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(CopyToClipboard, {
+                                    value: token
                                 })
                             ]
                         })

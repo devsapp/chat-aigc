@@ -15,14 +15,13 @@ Parameters:
   required: # 必填项
     - region
     - serviceName
-    - functionName
     - wanx_apikey
     - bucketName
   properties:
     region:
       title: 地域
       type: string
-      default: 
+      default: cn-hangzhou
       description: 创建应用所在的地区
       enum:
         - cn-beijing
@@ -48,23 +47,7 @@ Parameters:
       type: secret
       default: ''
       pattern: "^[a-zA-Z_][a-zA-Z0-9-_:/.]{0,127}$"
-      description: '调用万相服务需要的api_key，可以到阿里云灵机平台进行修改'
-    wanx_style: 
-      title: 万相的风格
-      type: string
-      default: '<sketch>'
-      description: '调用万相风格'
-      enum:
-        - <sketch>
-        - <photography>
-        - <chinese painting>
-        - <portrait>
-        - <3d cartoon>
-        - <anime>
-        - <oil painting>
-        - <watercolor>
-        - <flat illustration>
-        - <auto>
+      description: '调用万相服务需要的api_key，可以到阿里云灵机平台进行修改'       
     roleArn:
       title: RAM 角色 ARN
       type: string

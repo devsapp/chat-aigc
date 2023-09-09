@@ -40,7 +40,7 @@ app.post('/renderImage', async (req: any, res: any) => {
     buffer = transformBase64ToBuffer(images.join(''));
   }
 
-  const fileName = Date.now() + 'sd.png';
+  const fileName = Date.now() + 'aigc_text2img.png';
   const headers = req.headers;
   const region = process.env.REGION;
   const bucketName = process.env.BUCKET_NAME;

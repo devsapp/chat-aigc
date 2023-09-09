@@ -14,6 +14,7 @@ const entity_1 = require("../entity");
 const prompt_generate_1 = require("../prompt-generate");
 const stable_diffusion_apis_1 = require("../stable-diffusion-apis");
 const wx_apis_1 = require("../wx-apis");
+const utils_1 = require("../utils");
 class DefaultService extends entity_1.ModelService {
     constructor(serviceType) {
         super();
@@ -44,13 +45,14 @@ class DefaultService extends entity_1.ModelService {
                 return yield (0, stable_diffusion_apis_1.text2img)(payload);
             }
             else {
+                const { prompt: _prompt, style } = (0, utils_1.extractWanXStyle)(finallyPrompt);
                 const payload = {
                     "model": "wanx-v1",
                     "input": {
-                        "prompt": finallyPrompt
+                        "prompt": _prompt
                     },
                     "parameters": {
-                        "style": process.env.WanXStyle || "<sketch>",
+                        "style": style || "<auto>",
                         "size": "1024*1024",
                         "n": 1,
                         "seed": 42

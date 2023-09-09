@@ -1,9 +1,9 @@
 import { useState } from 'react';
 // import { useNavigate } from 'react-router-dom';
 import { useRouter } from 'next/router';
-import { Stepper, Group, Grid, CopyButton, ActionIcon, Tooltip, Flex, Text, Highlight, TextInput, Button, Divider, LoadingOverlay, Collapse } from '@mantine/core';
+import { Stepper, Group, Grid, ActionIcon, Tooltip, Flex, Text, Highlight, TextInput, Button, Divider, LoadingOverlay, Collapse } from '@mantine/core';
 import { IconCopy, IconCheck } from '@tabler/icons-react';
-import { useDisclosure } from '@mantine/hooks';
+import { useDisclosure, useClipboard } from '@mantine/hooks';
 import { useForm, UseFormReturnType } from '@mantine/form';
 import { useGlobalStore } from '../store/landing';
 import { Path, DingTalkReadme, EventbusReadme } from "../constant";
@@ -21,10 +21,18 @@ interface EventBusProps {
     form: UseFormReturnType<Values>
 }
 
-
+const CopyToClipboard = ({ value }: any) => {
+    const clipboard = useClipboard({ timeout: 500 });
+    return <Tooltip label={clipboard.copied ? '已复制' : '复制'} withArrow position="right">
+        <ActionIcon color={clipboard.copied ? 'teal' : 'gray'} onClick={() => clipboard.copy(value)}>
+            {clipboard.copied ? <IconCheck size="1rem" /> : <IconCopy size="1rem" />}
+        </ActionIcon>
+    </Tooltip>
+}
 
 export function DingTalkOutGoing() {
     const [opened, { toggle }] = useDisclosure(false);
+    const clipboard = useClipboard({ timeout: 500 });
     const outgoing = useGlobalStore().outgoing;
     const { postUrl, token } = outgoing;
     return <div style={{ width: CONTAINER_SIZE, padding: 20 }}>
@@ -38,16 +46,7 @@ export function DingTalkOutGoing() {
                     direction="row"
                 >
                     <Text fw={700}>{postUrl}</Text>
-                    <CopyButton value={postUrl} timeout={2000}>
-                        {({ copied, copy }) => (
-                            <Tooltip label={copied ? '已复制' : '复制'} withArrow position="right">
-                                <ActionIcon color={copied ? 'teal' : 'gray'} onClick={copy}>
-                                    {copied ? <IconCheck size="1rem" /> : <IconCopy size="1rem" />}
-                                </ActionIcon>
-                            </Tooltip>
-                        )}
-                    </CopyButton>
-
+                    <CopyToClipboard value={postUrl} />
                 </Flex>
             </Grid.Col>
 
@@ -61,17 +60,7 @@ export function DingTalkOutGoing() {
                     direction="row"
                 >
                     <Text fw={700}>{token}</Text>
-                    <CopyButton value={token} timeout={2000}>
-
-                        {({ copied, copy }) => (
-                            <Tooltip label={copied ? '已复制' : '复制'} withArrow position="right">
-                                <ActionIcon color={copied ? 'teal' : 'gray'} onClick={copy}>
-                                    {copied ? <IconCheck size="1rem" /> : <IconCopy size="1rem" />}
-                                </ActionIcon>
-                            </Tooltip>
-                        )}
-
-                    </CopyButton>
+                    <CopyToClipboard value={token} />
                 </Flex>
             </Grid.Col>
         </Grid>
