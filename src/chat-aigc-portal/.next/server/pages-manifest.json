@@ -1,8 +1,8 @@
 {
   "/_app": "pages/_app.js",
   "/action": "pages/action.html",
-  "/api/init": "pages/api/init.js",
   "/": "pages/index.html",
+  "/api/init": "pages/api/init.js",
   "/_error": "pages/_error.js",
   "/api/eventbus": "pages/api/eventbus.js",
   "/_document": "pages/_document.js",

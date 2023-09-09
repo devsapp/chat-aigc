@@ -418,7 +418,7 @@ var Path;
 })(Path || (Path = {}));
 const DingTalkReadme = `### chat& 万相机器人设置教程一
 #### 1.钉群中添加机器人
-![image](https://img.alicdn.com/imgextra/i3/O1CN01WgM4bp22GBm2mHSSb_!!6000000007092-0-tps-1896-1002.jpg)
+![image](https://img.alicdn.com/imgextra/i1/O1CN01wg5N0C1f8e5Ton57P_!!6000000003962-0-tps-2710-104.jpg)
 
 ![image](https://img.alicdn.com/imgextra/i2/O1CN01rKW15m1dNBQbdMMhr_!!6000000003723-0-tps-980-1890.jpg)
 
