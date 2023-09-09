@@ -5,17 +5,17 @@ export enum Path {
 
 export const DingTalkReadme = `### chat& 万相机器人设置教程一
 #### 1.钉群中添加机器人
-![image](https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/r4mlQmJYMPXNlxow/img/9e67cd78-9d7f-40c8-92a9-6c6c7c8996b3.png)
+![image](https://img.alicdn.com/imgextra/i3/O1CN01WgM4bp22GBm2mHSSb_!!6000000007092-0-tps-1896-1002.jpg)
 
-![image](https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/r4mlQmJYMPXNlxow/img/e2e488ad-af11-4208-aff0-c80d541e65c3.png)
+![image](https://img.alicdn.com/imgextra/i2/O1CN01rKW15m1dNBQbdMMhr_!!6000000003723-0-tps-980-1890.jpg)
 
-![image](https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/r4mlQmJYMPXNlxow/img/6ed7d36b-2757-4a7c-ae35-4fbf34513c7b.png)
+![image](https://img.alicdn.com/imgextra/i1/O1CN01btZU2K25rEey6jTYK_!!6000000007579-0-tps-1352-1112.jpg)
 
-![image](https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/r4mlQmJYMPXNlxow/img/0253e413-d389-4498-a461-00007683f59c.png)
+![image](https://img.alicdn.com/imgextra/i3/O1CN01G7WIau1PLth48Va6d_!!6000000001825-0-tps-1362-1092.jpg)
 #### 2.安全设置选择“加签”（后续配置需要）
-![image](https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/r4mlQmJYMPXNlxow/img/81788dbf-fd69-4715-883d-fd7080b87195.png)
+![image](https://img.alicdn.com/imgextra/i2/O1CN01xWXhPI1FifE9bdNCA_!!6000000000521-0-tps-1354-1078.jpg)
 #### 3.开启outgoing，并复制页面信息填写到输入框
-![image](https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/r4mlQmJYMPXNlxow/img/733ed8f4-7501-42e9-88da-e30b031dd1b9.png)`;
+![image](https://img.alicdn.com/imgextra/i1/O1CN01u6c2Qq1zd8m7Xz1pW_!!6000000006736-0-tps-1364-1078.jpg)`;
 
 export const EventbusReadme = `### chat& 万相机器人设置教程二
 #### 1.复制钉钉机器人生成的webhook和加签token

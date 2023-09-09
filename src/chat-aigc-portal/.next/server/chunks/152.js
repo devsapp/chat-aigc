@@ -15,7 +15,7 @@ exports.noSSR = noSSR;
 var _extends = (__webpack_require__(495)/* ["default"] */ .Z);
 var _interop_require_default = (__webpack_require__(648)/* ["default"] */ .Z);
 var _react = _interop_require_default(__webpack_require__(689));
-var _loadable = _interop_require_default(__webpack_require__(832));
+var _loadable = _interop_require_default(__webpack_require__(176));
 function dynamic(dynamicOptions, options) {
     let loadableFn = _loadable.default;
     let loadableOptions = {

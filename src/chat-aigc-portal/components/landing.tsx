@@ -1,11 +1,11 @@
 import { useState } from 'react';
 // import { useNavigate } from 'react-router-dom';
 import { useRouter } from 'next/router';
-import { Stepper, Group, Grid, ActionIcon, Tooltip, Flex, Text, Highlight, TextInput, Button, Divider, LoadingOverlay, Collapse } from '@mantine/core';
-import { IconCopy, IconCheck } from '@tabler/icons-react';
+import { Stepper, Group, Grid,  Flex, Text, Highlight, TextInput, Button, Divider, LoadingOverlay, Collapse } from '@mantine/core';
 import { useDisclosure, useClipboard } from '@mantine/hooks';
 import { useForm, UseFormReturnType } from '@mantine/form';
 import { useGlobalStore } from '../store/landing';
+import CopyToClipboard from './copyToClipboard';
 import { Path, DingTalkReadme, EventbusReadme } from "../constant";
 import Markdown from './markdown';
 import './landing.module.scss';
@@ -21,14 +21,7 @@ interface EventBusProps {
     form: UseFormReturnType<Values>
 }
 
-const CopyToClipboard = ({ value }: any) => {
-    const clipboard = useClipboard({ timeout: 500 });
-    return <Tooltip label={clipboard.copied ? '已复制' : '复制'} withArrow position="right">
-        <ActionIcon color={clipboard.copied ? 'teal' : 'gray'} onClick={() => clipboard.copy(value)}>
-            {clipboard.copied ? <IconCheck size="1rem" /> : <IconCopy size="1rem" />}
-        </ActionIcon>
-    </Tooltip>
-}
+
 
 export function DingTalkOutGoing() {
     const [opened, { toggle }] = useDisclosure(false);

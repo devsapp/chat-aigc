@@ -4,7 +4,6 @@ vars:
   region: '{{region}}'
   bucketName: '{{bucketName}}' ## 存储image
   wanx_apikey: '{{wanx_apikey}}'
-  wanx_style: '{{wanx_style}}'
   service: 
     name: '{{serviceName}}'
     description: '可对话的AIGC'
@@ -151,7 +150,6 @@ services:
           # PROXY_URL: ${env.PROXY_URL}
           serviceType: 'WX'
           WX_APIKEY: '${vars.wanx_apikey}'
-          WanXStyle: '${vars.wanx_style}'
           PATH: >-
             /opt/nodejs18/bin::/usr/local/bin/apache-maven/bin:/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/ruby/bin:/opt/bin:/code:/code/bin
         codeUri: ./chat-server/async-render-image
