@@ -30,6 +30,7 @@ class OssClient {
             try {
                 const headers = {
                     'x-oss-tagging': 'Tag1=created-by-fc',
+                    'x-oss-object-acl': 'public-read'
                 };
                 const result = yield this.client.put(objectName, buffer, { headers });
                 return result;
