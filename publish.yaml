@@ -9,6 +9,10 @@ HomePage: 项目首页地址
 Tags: #标签详情
   - 部署函数
 Category: Web框架
+Service:
+  函数计算:
+    Authorities:
+      - AliyunOSSFullAccess
 Parameters:
   type: object
   additionalProperties: false # 不允许增加其他属性
